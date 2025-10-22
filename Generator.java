@@ -1,17 +1,19 @@
-package academy.maze;
+package academy.maze.generator;
 
 import academy.maze.dto.Maze;
 
-/** Генератор лабиринта */
-public interface Generator {
+public class Generator {
+    private GeneratorStrategy strategy;
 
-    /**
-     * Генерирует лабиринт.
-     *
-     * @param width ширина лабиринта.
-     * @param height высота лабиринта.
-     * @return лабиринт
-     * @throws IllegalArgumentException если невозможно сгенерировать лабиринт.
-     */
-    Maze generate(int width, int height);
+    public Generator(GeneratorStrategy strategy) {
+        this.strategy = strategy;
+    }
+
+    public void setStrategy (GeneratorStrategy strategy) {
+        this.strategy = strategy;
+    }
+
+    public Maze generate(int wight, int height) {
+        return strategy.generate(wight, height);
+    }
 }

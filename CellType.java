@@ -1,7 +1,29 @@
 package academy.maze.dto;
 
-/** Тип ячейки в лабиринте. WALL - стена, PATH - свободная ячейка. */
+/** Тип ячейки в лабиринте */
 public enum CellType {
-    WALL,
-    PATH,
+    WALL("#"),           // Стена
+    PATH(" "),           // Путь
+    START("O"),          // Начало
+    END("X"),            // Конец
+    SOLUTION_PATH("."),  // Путь решения
+    SAND("~"),           // Песок (замедляет движение)
+    COIN("$");           // Монетка (ускоряет движение)
+
+    private final String symbol;
+
+    CellType(String symbol) {
+        this.symbol = symbol;
+    }
+
+    public String getSymbol() {
+        return symbol;
+    }
+
+    public boolean isPossible() {
+        return this != WALL;
+    }
+
+
+
 }
