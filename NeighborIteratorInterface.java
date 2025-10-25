@@ -1,4 +1,4 @@
-package academy.maze.generator.Iterator;
+package academy.maze.solver.Iterator;
 
 import academy.maze.dto.Point;
 import java.util.Iterator;

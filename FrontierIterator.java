@@ -1,7 +1,7 @@
 package academy.maze.generator.Iterator;
 
 import academy.maze.dto.CellType;
-import academy.maze.dto.Direction;
+import academy.maze.generator.Direction;
 import academy.maze.dto.Edge;
 import academy.maze.dto.Maze;
 import academy.maze.dto.Point;

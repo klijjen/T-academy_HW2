@@ -16,4 +16,12 @@ public class Generator {
     public Maze generate(int wight, int height) {
         return strategy.generate(wight, height);
     }
+
+    public static Generator createDFSGenerator() {
+        return new Generator(new DFSGenerator());
+    }
+
+    public static Generator createPrimGenerator() {
+        return new Generator(new PrimGenerator());
+    }
 }

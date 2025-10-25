@@ -20,7 +20,7 @@ public enum CellType {
         return symbol;
     }
 
-    public boolean isPossible() {
+    public boolean isPassable() {
         return this != WALL;
     }
 

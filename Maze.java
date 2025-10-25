@@ -23,7 +23,7 @@ public record Maze(CellType[][] cells, int width, int height) {
     }
 
     public Maze(CellType[][] cells) {
-        this(cells, cells.length, cells[0].length);
+        this(cells, cells[0].length, cells.length);
     }
 
     public Maze(int width, int height) {

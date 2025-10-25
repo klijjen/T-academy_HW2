@@ -33,5 +33,8 @@ public record Path(List<Point> points) {
     public boolean contains(Point point) {
         return points.contains(point);
     }
+    public static Path empty() {
+        return new Path(new Point[0]);
+    }
 
 }

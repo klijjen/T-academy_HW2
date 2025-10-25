@@ -1,19 +1,28 @@
-package academy.maze;
+package academy.maze.solver;
 
 import academy.maze.dto.Maze;
 import academy.maze.dto.Path;
 import academy.maze.dto.Point;
 
-/** Решатель лабиринта */
-public interface Solver {
+public class Solver {
+    private SolverStrategy strategy;
 
-    /**
-     * Решение лабиринта. Если путь не найден, то возвращается путь с длиной 0.
-     *
-     * @param maze лабиринт.
-     * @param start начальная точка.
-     * @param end конечная точка.
-     * @return путь в лабиринте.
-     */
-    Path solve(Maze maze, Point start, Point end);
+    public Solver(SolverStrategy strategy) {
+        this.strategy = strategy;
+    }
+
+    public void setStrategy (SolverStrategy strategy) {
+        this.strategy = strategy;
+    }
+
+    public Path solve(Maze maze, Point start, Point end) {
+        return strategy.solve(maze, start, end);
+    }
+    public static Solver createAStarSolver() {
+        return new Solver(new AStarSolver());
+    }
+
+    public static Solver createDijkstraSolver() {
+        return new Solver(new DijkstraSolver());
+    }
 }

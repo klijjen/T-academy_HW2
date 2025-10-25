@@ -1,16 +1,11 @@
 package academy.maze.generator;
 
 import academy.maze.dto.CellType;
-import academy.maze.dto.Direction;
 import academy.maze.dto.Edge;
 import academy.maze.dto.Maze;
 import academy.maze.dto.Point;
 import academy.maze.generator.Iterator.FrontierIterator;
-import java.util.ArrayList;
-import java.util.List;
 import static academy.maze.dto.Point.createPoint;
-import static academy.maze.dto.Point.sumOfVal;
-import static academy.maze.dto.Point.sumOfValAndHalf;
 import static academy.maze.utils.MazeUtils.createStartAndEnd;
 import static academy.maze.utils.MazeUtils.validateDimensions;
 

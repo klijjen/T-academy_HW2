@@ -1,14 +1,9 @@
 package academy.maze.generator;
 
 import academy.maze.dto.CellType;
-import academy.maze.dto.Direction;
 import academy.maze.dto.Maze;
 import academy.maze.dto.Point;
 import academy.maze.generator.Iterator.NeighborIterator;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
 import static academy.maze.dto.Point.createPoint;
 import static academy.maze.dto.Point.halfOfVal;
 import static academy.maze.dto.Point.sumOfVal;

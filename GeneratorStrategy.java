@@ -1,9 +1,6 @@
 package academy.maze.generator;
 
-import academy.maze.dto.CellType;
-import academy.maze.dto.Direction;
 import academy.maze.dto.Maze;
-import academy.maze.dto.Point;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -21,9 +18,5 @@ public interface GeneratorStrategy {
     Maze generate(int width, int height);
 
     Random random = ThreadLocalRandom.current();
-
-    default Direction[] getDirections() {
-        return Direction.values();
-    }
 
 }
