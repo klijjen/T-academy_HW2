@@ -64,4 +64,8 @@ public record Maze(CellType[][] cells, int width, int height) {
         return point.x() >= 0 && point.x() < width && point.y() >= 0 && point.y() < height;
     }
 
+    public static Maze copy (Maze maze) {
+        return new Maze(maze.cells);
+    }
+
 }

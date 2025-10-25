@@ -20,6 +20,16 @@ public enum CellType {
         return symbol;
     }
 
+    public static CellType getCellTypeByChar(char c) {
+        String findSymbol = String.valueOf(c);
+        for (CellType cellType : CellType.values()) {
+            if (findSymbol.equals(cellType.getSymbol())) {
+                return cellType;
+            }
+        }
+        return null;
+    }
+
     public boolean isPassable() {
         return this != WALL;
     }

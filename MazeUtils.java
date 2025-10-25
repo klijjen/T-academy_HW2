@@ -6,16 +6,6 @@ import academy.maze.dto.Maze;
 public final class MazeUtils {
     private MazeUtils() {}
 
-    public static void printMaze(Maze maze) {
-        for (int y = 0; y < maze.height(); y++) {
-            for (int x = 0; x < maze.width(); x++) {
-                CellType cell = maze.getCell(x, y);
-                System.out.print(cell.getSymbol() + cell.getSymbol());
-            }
-            System.out.println();
-        }
-    }
-
     public static void validateDimensions(int width, int height) {
         if (width < 3 || height < 3) {
             throw new IllegalArgumentException("Размеры лабиринта должны быть не менее 3 на 3");
