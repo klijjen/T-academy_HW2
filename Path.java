@@ -30,9 +30,6 @@ public record Path(List<Point> points) {
         return points.getLast();
     }
 
-    public boolean contains(Point point) {
-        return points.contains(point);
-    }
     public static Path empty() {
         return new Path(new Point[0]);
     }

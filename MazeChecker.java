@@ -3,6 +3,7 @@ package academy.maze.utils;
 import academy.maze.dto.CellType;
 import academy.maze.dto.Maze;
 import academy.maze.dto.Point;
+import academy.maze.solver.Direction;
 import java.util.LinkedList;
 import java.util.Queue;
 import static academy.maze.dto.Point.createPoint;
@@ -24,7 +25,7 @@ public class MazeChecker {
             }
         }
         assert start != null;
-        visited[start.x()][start.y()] = true;
+        visited[start.y()][start.x()] = true;
 
         Point exit = null;
         for (int y = 0; y < maze.height(); y++) {
@@ -44,13 +45,11 @@ public class MazeChecker {
                 return true;
             }
 
-            Point[] directions = {createPoint(0, -1), createPoint(0, 1), createPoint(-1, 0), createPoint(1, 0)};
+            for (Direction dir : Direction.values()) {
+                Point neighbor = sumOfVal(point, dir.toPoint());
 
-            for (Point dir : directions) {
-                Point neighbor = sumOfVal(point, dir);
-
-                if (maze.isValidPosition(neighbor) && !visited[neighbor.x()][neighbor.y()] && maze.getCell(neighbor) != CellType.WALL) {
-                    visited[neighbor.x()][neighbor.y()] = true;
+                if (maze.isValidPosition(neighbor) && !visited[neighbor.y()][neighbor.x()] && maze.getCell(neighbor) != CellType.WALL) {
+                    visited[neighbor.y()][neighbor.x()] = true;
                     queue.add(neighbor);
                 }
             }

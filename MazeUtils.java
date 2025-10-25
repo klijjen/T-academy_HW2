@@ -4,7 +4,6 @@ import academy.maze.dto.CellType;
 import academy.maze.dto.Maze;
 
 public final class MazeUtils {
-
     private MazeUtils() {}
 
     public static void printMaze(Maze maze) {

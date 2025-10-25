@@ -1,7 +1,5 @@
 package academy.maze.dto;
 
-import java.util.Arrays;
-
 /**
  * Лабиринт.
  *
@@ -30,11 +28,7 @@ public record Maze(CellType[][] cells, int width, int height) {
         this(createEmptyMaze(width, height), width, height);
     }
 
-    public CellType getCell(Point point) {
-        return cells[point.x()][point.y()];
-    }
-
-    private static CellType[][] createEmptyMaze (int width, int height) {
+    private static CellType[][] createEmptyMaze(int width, int height) {
         CellType[][] cells = new CellType[height][width];
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
@@ -44,13 +38,21 @@ public record Maze(CellType[][] cells, int width, int height) {
         return cells;
     }
 
+    public CellType getCell(Point point) {
+        return getCell(point.x(), point.y());
+    }
+
     public CellType getCell(int x, int y) {
-        return isValidPosition(x, y) ? cells[x][y] : CellType.WALL;
+        return isValidPosition(x, y) ? cells[y][x] : CellType.WALL;
+    }
+
+    public void setCell(Point point, CellType type) {
+        setCell(point.x(), point.y(), type);
     }
 
     public void setCell(int x, int y, CellType type) {
         if (isValidPosition(x, y)) {
-            cells[x][y] = type;
+            cells[y][x] = type;
         }
     }
 
@@ -60,14 +62,6 @@ public record Maze(CellType[][] cells, int width, int height) {
 
     public boolean isValidPosition(Point point) {
         return point.x() >= 0 && point.x() < width && point.y() >= 0 && point.y() < height;
-    }
-
-    private CellType[][] copyCell() {
-        CellType[][] newCells = new CellType[height][width];
-        for (int i = 0; i < height; i++) {
-            newCells[i] = Arrays.copyOf(cells[i], width);
-        }
-        return newCells;
     }
 
 }

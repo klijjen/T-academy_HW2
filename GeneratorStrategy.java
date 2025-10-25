@@ -16,7 +16,6 @@ public interface GeneratorStrategy {
      * @throws IllegalArgumentException если невозможно сгенерировать лабиринт.
      */
     Maze generate(int width, int height);
-
     Random random = ThreadLocalRandom.current();
 
 }

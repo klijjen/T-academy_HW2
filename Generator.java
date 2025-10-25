@@ -4,7 +4,6 @@ import academy.maze.dto.Maze;
 
 public class Generator {
     private GeneratorStrategy strategy;
-
     public Generator(GeneratorStrategy strategy) {
         this.strategy = strategy;
     }

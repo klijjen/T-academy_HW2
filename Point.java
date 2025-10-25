@@ -21,20 +21,9 @@ public record Point(int x, int y) {
     public static Point halfOfVal(Point p) {
         return new Point(p.x / 2, p.y / 2);
     }
+
     public static Point sumOfValAndHalf(Point a, Point b) {
         return new Point(a.x + b.x / 2, a.y + b.y / 2);
-    }
-
-    public Point add(Point other) {
-        return new Point(x + other.x, y + other.y);
-    }
-
-    public Point subtract(Point other) {
-        return new Point(x - other.x, y - other.y);
-    }
-
-    public double distanceTo(Point other) {
-        return Math.sqrt(Math.pow(x - other.x, 2) + Math.pow(y - other.y, 2));
     }
 
     public int manhattanDistanceTo(Point other) {

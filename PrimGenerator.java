@@ -10,7 +10,6 @@ import static academy.maze.utils.MazeUtils.createStartAndEnd;
 import static academy.maze.utils.MazeUtils.validateDimensions;
 
 public class PrimGenerator implements GeneratorStrategy {
-
     public PrimGenerator() {}
 
     @Override

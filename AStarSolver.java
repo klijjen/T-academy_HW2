@@ -61,6 +61,7 @@ public class AStarSolver implements SolverStrategy {
             allNodes.put(neighbor, updatedNode);
         }
     }
+
     private Path reconstructPath(Node endNode) {
         java.util.List<Point> path = new ArrayList<>();
         Node node = endNode;

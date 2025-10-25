@@ -18,6 +18,7 @@ public class Solver {
     public Path solve(Maze maze, Point start, Point end) {
         return strategy.solve(maze, start, end);
     }
+
     public static Solver createAStarSolver() {
         return new Solver(new AStarSolver());
     }
