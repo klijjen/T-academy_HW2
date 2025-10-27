@@ -7,8 +7,8 @@ public final class MazeUtils {
     private MazeUtils() {}
 
     public static void validateDimensions(int width, int height) {
-        if (width < 3 || height < 3) {
-            throw new IllegalArgumentException("Размеры лабиринта должны быть не менее 3 на 3");
+        if (width < 1 || height < 1) {
+            throw new IllegalArgumentException("Размеры лабиринта должны быть >= 1");
         }
         if (width % 2 == 0 || height % 2 == 0) {
             throw new IllegalArgumentException("Размеры лабиринта должны быть нечетными");

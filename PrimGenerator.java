@@ -14,12 +14,20 @@ public class PrimGenerator implements GeneratorStrategy {
 
     @Override
     public Maze generate(int width, int height) {
+        width += 2;
+        height += 2;
+
         validateDimensions(width, height);
 
         Maze maze = new Maze(width, height);
 
         Point start = createPoint(1, 1);
+
+        createStartAndEnd(maze);
+
         maze.setCell(start.x(), start.y(), CellType.PATH);
+
+
 
         FrontierIterator frontierIterator = new FrontierIterator(random, maze);
         frontierIterator.addFrontier(start);

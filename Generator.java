@@ -3,12 +3,8 @@ package academy.maze.generator;
 import academy.maze.dto.Maze;
 
 public class Generator {
-    private GeneratorStrategy strategy;
+    private final GeneratorStrategy strategy;
     public Generator(GeneratorStrategy strategy) {
-        this.strategy = strategy;
-    }
-
-    public void setStrategy (GeneratorStrategy strategy) {
         this.strategy = strategy;
     }
 
@@ -17,14 +13,12 @@ public class Generator {
     }
 
     public static Generator createGenerator(String algorithm) {
-        switch (algorithm.toLowerCase()) {
-            case "dfs":
-                return Generator.createDFSGenerator();
-            case "prim":
-                return Generator.createPrimGenerator();
-            default:
-                throw new IllegalArgumentException("Неизвестный алгоритм: " + algorithm + ". Поддерживаемые алгоритмы: dfs, prim");
-        }
+        return switch (algorithm.toLowerCase()) {
+            case "dfs" -> Generator.createDFSGenerator();
+            case "prim" -> Generator.createPrimGenerator();
+            default ->
+                    throw new IllegalArgumentException("Неизвестный алгоритм: " + algorithm + ". Поддерживаемые алгоритмы: dfs, prim");
+        };
     }
 
     private static Generator createDFSGenerator() {

@@ -26,7 +26,7 @@ import static academy.maze.solver.SolverStrategy.validStartAndEnd;
  * solve --algorithm=astar --file=maze.txt 1,1 19,19
  * solve --algorithm=dijkstra --file=maze.txt 0,0 20,20 --output=solution.txt --unicode
  */
-@Command(name = "solve", description = "Решение лабиринта с использованием указанного алгоритма")
+@Command(name = "solve", description = "Solve a maze with specified algorithm and points.")
 public class SolverCommand implements Callable<Integer> {
 
     @Option(
@@ -41,7 +41,7 @@ public class SolverCommand implements Callable<Integer> {
         description = "Файл с лабиринтом для решения",
         required = true
     )
-    private File inputFile;
+    private String inputFile;
 
     @Option(
         names = {"-s", "--start"},
@@ -61,7 +61,7 @@ public class SolverCommand implements Callable<Integer> {
         names = {"-o", "--output"},
         description = "Имя файла для сохранения (если не указано, решение выводится в консоль)"
     )
-    private File outputFile;
+    private String outputFile;
 
     @Option(
         names = {"-u", "--unicode"},
@@ -83,10 +83,11 @@ public class SolverCommand implements Callable<Integer> {
             Solver solver = createSolver(algorithm);
             Path solution = solver.solve(maze, start, end);
 
+
             // Обработка и вывод результата
             return handleSolution(maze, solution, start, end);
         } catch (Exception e) {
-            System.err.println("Ошибка при решении лабиринта: " + e.getMessage());
+            System.err.println("Invalid point format: " + e.getMessage());
             return 1;
         }
     }
@@ -98,21 +99,20 @@ public class SolverCommand implements Callable<Integer> {
         try {
             String[] parts = pointStr.split(",");
             if (parts.length != 2) {
-                throw new IllegalArgumentException("Точка должна быть в формате: x,y");
+                throw new IllegalArgumentException(pointStr + ", expected format: x,y");
             }
             int x = Integer.parseInt(parts[0].trim());
             int y = Integer.parseInt(parts[1].trim());
             return new Point(x, y);
         } catch (NumberFormatException e) {
-            throw new IllegalArgumentException("Некорректный формат точки: " + pointStr + ". Ожидаемый формат: x,y");
-        }
+            throw new IllegalArgumentException("Invalid point format: " + pointStr + ", expected format: x,y");        }
     }
 
     /**
      * Загружает лабиринт из файла
      */
-    private Maze loadMaze(File mazeFile) throws Exception {
-        return MazeFileManager.loadMaze(mazeFile.getPath());
+    private Maze loadMaze(String mazeFile) throws Exception {
+        return MazeFileManager.loadMaze(mazeFile);
     }
 
     /**
@@ -124,7 +124,7 @@ public class SolverCommand implements Callable<Integer> {
             return 1;
         }
 
-        System.out.println("Найден путь длиной: " + solution.length());
+//        System.out.println("Найден путь длиной: " + solution.length());
         outputSolution(maze, solution);
         return 0;
     }
@@ -135,8 +135,8 @@ public class SolverCommand implements Callable<Integer> {
     private void outputSolution(Maze maze, Path solution) {
         MazeVisualizer visualizer = new MazeVisualizer(useUnicode);
         if (outputFile != null) {
-            MazeFileManager.saveSolution(maze, solution, outputFile.getPath(), useUnicode);
-            System.out.println("Решение сохранено в: " + outputFile.getPath());
+            MazeFileManager.saveSolution(maze, solution, outputFile, useUnicode);
+//            System.out.println("Решение сохранено в: " + outputFile);
         } else {
             visualizer.displayMaze(maze, solution);
         }

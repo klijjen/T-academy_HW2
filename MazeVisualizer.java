@@ -4,7 +4,6 @@ import academy.maze.dto.CellType;
 import academy.maze.dto.Maze;
 import academy.maze.dto.Path;
 import academy.maze.dto.Point;
-import org.jetbrains.annotations.NotNull;
 import java.io.PrintWriter;
 import static academy.maze.dto.Maze.copy;
 
@@ -30,7 +29,7 @@ public class MazeVisualizer {
     public void saveMazeToFile(Maze maze, Path path, String filename) {
         try (PrintWriter writer = new PrintWriter(filename)) {
             printMazeToWriter(createSolutionMaze(maze, path), writer);
-            System.out.println("Лабиринт сохранен в файл: " + filename);
+//            System.out.println("Лабиринт сохранен в файл: " + filename);
         } catch (Exception e) {
             throw new RuntimeException("Ошибка при сохранении лабиринта в файл: " + filename, e);
         }
@@ -40,6 +39,13 @@ public class MazeVisualizer {
         Maze solutionMaze = copy(maze);
 
         if (!path.isEmpty()) {
+            Point start = path.getStart();
+            Point end = path.getEnd();
+
+            // Восстанавливаем старт и финиш в решении
+            solutionMaze.setCell(start, CellType.START);
+            solutionMaze.setCell(end, CellType.END);
+
             for (Point point : path.points()) {
                 CellType current = maze.getCell(point);
                 if (current != CellType.START && current != CellType.END) {
@@ -74,11 +80,11 @@ public class MazeVisualizer {
     private String getSymbol(CellType cellType) {
         if (useUnicode) {
             return switch (cellType) {
-                case WALL -> "█";
-                case PATH -> " ";
+                case WALL -> "⬛";
+                case PATH -> "⬜";
                 case START -> "🚩";
                 case END -> "🏁";
-                case SOLUTION_PATH -> "·";
+                case SOLUTION_PATH -> "💎";
                 case SAND -> null;
                 case COIN -> null;
             };

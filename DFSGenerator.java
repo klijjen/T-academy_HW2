@@ -18,10 +18,10 @@ public class DFSGenerator implements GeneratorStrategy {
 
     @Override
     public Maze generate(int width, int height) {
-        validateDimensions(width, height);
 
         Maze maze = new Maze(width, height);
         Point start = createPoint(1, 1);
+
 
         DFS(maze, start);
 

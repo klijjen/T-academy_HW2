@@ -6,7 +6,6 @@ import academy.maze.dto.Path;
 
 import java.io.*;
 import java.nio.file.Files;
-import java.nio.file.StandardOpenOption;
 import java.util.List;
 import static academy.maze.utils.MazeUtils.validateDimensions;
 
@@ -47,10 +46,10 @@ public class MazeFileManager {
         Maze maze = new Maze(width, height);
 
         for (int y = 0; y < height; y++) {
-            String line = lines.get(y);
+            String line = lines.get(y).trim();
 
             if (line.length() != width) {
-                throw new IllegalArgumentException("Несовпадение ширины лабиринта в строке " + (y + 1));
+                throw new IllegalArgumentException("Несовпадение ширины лабиринта в строке " + (y + 1) + " " + line.length() + " " + width);
             }
 
             for (int x = 0; x < width; x++) {
