@@ -13,7 +13,7 @@ import java.util.PriorityQueue;
 public class AStarSolver implements SolverStrategy {
     @Override
     public Path solve(Maze maze, Point start, Point end) {
-        validStartAndEnd(start, end, maze);
+        SolverStrategy.validStartAndEnd(start, end, maze);
 
         if (!maze.getCell(start.x(), start.y()).isPassable() ||
             !maze.getCell(end.x(), end.y()).isPassable()) {

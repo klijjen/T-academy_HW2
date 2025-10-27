@@ -19,11 +19,22 @@ public class Solver {
         return strategy.solve(maze, start, end);
     }
 
-    public static Solver createAStarSolver() {
+    public static Solver createSolver(String algorithm) {
+        switch (algorithm.toLowerCase()) {
+            case "astar":
+                return Solver.createAStarSolver();
+            case "dijkstra":
+                return Solver.createDijkstraSolver();
+            default:
+                throw new IllegalArgumentException("Неизвестный алгоритм: " + algorithm + ". Поддерживаемые алгоритмы: astar, dijkstra");
+        }
+    }
+
+    private static Solver createAStarSolver() {
         return new Solver(new AStarSolver());
     }
 
-    public static Solver createDijkstraSolver() {
+    private static Solver createDijkstraSolver() {
         return new Solver(new DijkstraSolver());
     }
 }

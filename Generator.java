@@ -16,11 +16,22 @@ public class Generator {
         return strategy.generate(wight, height);
     }
 
-    public static Generator createDFSGenerator() {
+    public static Generator createGenerator(String algorithm) {
+        switch (algorithm.toLowerCase()) {
+            case "dfs":
+                return Generator.createDFSGenerator();
+            case "prim":
+                return Generator.createPrimGenerator();
+            default:
+                throw new IllegalArgumentException("Неизвестный алгоритм: " + algorithm + ". Поддерживаемые алгоритмы: dfs, prim");
+        }
+    }
+
+    private static Generator createDFSGenerator() {
         return new Generator(new DFSGenerator());
     }
 
-    public static Generator createPrimGenerator() {
+    private static Generator createPrimGenerator() {
         return new Generator(new PrimGenerator());
     }
 }

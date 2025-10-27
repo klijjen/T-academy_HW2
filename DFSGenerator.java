@@ -60,9 +60,10 @@ public class DFSGenerator implements GeneratorStrategy {
 
         for (Direction dir : Direction.values()) {
             Point neighbor = sumOfVal(point, dir.toPoint());
+            Point doubleNeighbor = sumOfVal(point, sumOfVal(dir.toPoint(), dir.toPoint()));
 
-            if (maze.isValidPosition(neighbor) && maze.getCell(neighbor) == CellType.WALL) {
-                neighbors.add(neighbor);
+            if (maze.isValidPosition(doubleNeighbor) && maze.getCell(doubleNeighbor) == CellType.WALL) {
+                neighbors.add(doubleNeighbor);
             }
         }
 

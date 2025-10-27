@@ -17,7 +17,7 @@ public interface SolverStrategy {
      */
     Path solve(Maze maze, Point start, Point end);
 
-    default void validStartAndEnd(Point start, Point end, Maze maze) {
+    static void validStartAndEnd(Point start, Point end, Maze maze) {
         if (!maze.isValidPosition(start)) {
             throw new IllegalArgumentException("Стартовая точка находится вне лабиринта");
         }
