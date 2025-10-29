@@ -6,10 +6,23 @@ import academy.maze.dto.Point;
 import academy.maze.solver.Direction;
 import java.util.LinkedList;
 import java.util.Queue;
+import static academy.maze.dto.Point.add;
 import static academy.maze.dto.Point.createPoint;
-import static academy.maze.dto.Point.sumOfVal;
 
+/**
+ * Утилита для проверки связности лабиринта.
+ * Проверяет, существует ли путь от начальной точки до конечной.
+ */
 public class MazeChecker {
+
+    /**
+     * Проверяет, связан ли лабиринт - существует ли путь от начальной до конечной точки.
+     * Использует алгоритм BFS (поиск в ширину) для проверки связности.
+     *
+     * @param maze лабиринт для проверки
+     * @return true если существует путь от START до END, false в противном случае
+     * @throws AssertionError если начальная точка не найдена в лабиринте
+     */
     public static boolean isMazeConnected(Maze maze) {
         boolean[][] visited = new boolean[maze.width()][maze.height()];
         Queue<Point> queue = new LinkedList<>();
@@ -46,7 +59,7 @@ public class MazeChecker {
             }
 
             for (Direction dir : Direction.values()) {
-                Point neighbor = sumOfVal(point, dir.toPoint());
+                Point neighbor = add(point, dir.toPoint());
 
                 if (maze.isValidPosition(neighbor) && !visited[neighbor.y()][neighbor.x()] && maze.getCell(neighbor) != CellType.WALL) {
                     visited[neighbor.y()][neighbor.x()] = true;
@@ -57,5 +70,4 @@ public class MazeChecker {
 
         return false;
     }
-
 }

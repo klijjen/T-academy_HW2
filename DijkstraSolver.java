@@ -11,20 +11,27 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
+import static academy.maze.solver.SolverUtils.buildPath;
+import static academy.maze.solver.SolverUtils.validateInput;
 
+/**
+ * Реализация алгоритма Дейкстры для решения лабиринтов.
+ * Находит кратчайший путь от начальной до конечной точки без использования эвристики.
+ */
 public class DijkstraSolver implements SolverStrategy {
+
+    /**
+     * Решает лабиринт с использованием алгоритма Дейкстры.
+     * Если путь не найден, возвращается пустой путь.
+     *
+     * @param maze лабиринт для решения
+     * @param start начальная точка пути
+     * @param end конечная точка пути
+     * @return найденный путь или пустой путь, если решение не найдено
+     */
     @Override
     public Path solve(Maze maze, Point start, Point end) {
-        SolverStrategy.validStartAndEnd(start, end, maze);
-
-        if (!maze.getCell(start.x(), start.y()).isPassable() ||
-            !maze.getCell(end.x(), end.y()).isPassable()) {
-            return Path.empty();
-        }
-
-        if (start.equals(end)) {
-            return new Path(List.of(start));
-        }
+        validateInput(maze, start, end);
 
         Map<Point, Integer> distances = new HashMap<>();
         Map<Point, Point> previous = new HashMap<>();
@@ -42,7 +49,7 @@ public class DijkstraSolver implements SolverStrategy {
             }
 
             if (point.equals(end)) {
-                break;
+                return buildPath(previous, start, end);
             }
 
             NeighborIterator neighborIterator = new NeighborIterator(point, maze);
@@ -53,9 +60,20 @@ public class DijkstraSolver implements SolverStrategy {
             }
         }
 
-        return buildPath(previous, start, end);
+        return Path.empty();
     }
 
+    /**
+     * Обрабатывает соседнюю ячейку в алгоритме Дейкстры.
+     * Обновляет расстояние до соседа если найден более короткий путь.
+     *
+     * @param current текущая точка
+     * @param neighbor соседняя точка
+     * @param currentDistance расстояние до текущей точки
+     * @param distances карта расстояний до всех точек
+     * @param previous карта предыдущих точек для восстановления пути
+     * @param queue очередь с приоритетом для обработки точек
+     */
     private void processNeighbor(Point current, Point neighbor, int currentDistance, Map<Point, Integer> distances, Map<Point, Point> previous, PriorityQueue<Point> queue) {
         int newDistance = currentDistance + 1;
 
@@ -64,26 +82,5 @@ public class DijkstraSolver implements SolverStrategy {
             previous.put(neighbor, current);
             queue.add(neighbor);
         }
-    }
-
-    private Path buildPath(Map<Point, Point> previous, Point start, Point end) {
-        if (!previous.containsKey(end)) {
-            return Path.empty();
-        }
-
-        List<Point> pathPoints = new ArrayList<>();
-        Point current = end;
-
-        while (current != null) {
-            pathPoints.add(current);
-            current = previous.get(current);
-        }
-        Collections.reverse(pathPoints);
-
-        if (!pathPoints.getFirst().equals(start)) {
-            return Path.empty();
-        }
-
-        return new Path(pathPoints);
     }
 }

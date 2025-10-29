@@ -6,28 +6,33 @@ import academy.maze.dto.Maze;
 import academy.maze.dto.Point;
 import academy.maze.generator.Iterator.FrontierIterator;
 import static academy.maze.dto.Point.createPoint;
-import static academy.maze.utils.MazeUtils.createStartAndEnd;
-import static academy.maze.utils.MazeUtils.validateDimensions;
+import static academy.maze.utils.Utils.createStartAndEnd;
 
+/**
+ * Генератор лабиринтов с использованием алгоритма Прима.
+ * Создает сбалансированные лабиринты с равномерным распределением путей.
+ */
 public class PrimGenerator implements GeneratorStrategy {
+
+    /**
+     * Создает новый генератор лабиринтов по алгоритму Прима.
+     */
     public PrimGenerator() {}
 
+    /**
+     * Генерирует лабиринт указанного размера с использованием алгоритма Прима.
+     *
+     * @param width ширина лабиринта
+     * @param height высота лабиринта
+     * @return сгенерированный лабиринт
+     * @throws IllegalArgumentException если невозможно сгенерировать лабиринт
+     */
     @Override
     public Maze generate(int width, int height) {
-        width += 2;
-        height += 2;
-
-        validateDimensions(width, height);
-
         Maze maze = new Maze(width, height);
-
         Point start = createPoint(1, 1);
 
-        createStartAndEnd(maze);
-
         maze.setCell(start.x(), start.y(), CellType.PATH);
-
-
 
         FrontierIterator frontierIterator = new FrontierIterator(random, maze);
         frontierIterator.addFrontier(start);

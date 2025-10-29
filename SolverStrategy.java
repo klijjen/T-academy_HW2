@@ -4,7 +4,10 @@ import academy.maze.dto.Maze;
 import academy.maze.dto.Path;
 import academy.maze.dto.Point;
 
-/** Решатель лабиринта */
+/**
+ * Стратегия решения лабиринта.
+ * Определяет интерфейс для различных алгоритмов поиска пути в лабиринте.
+ */
 public interface SolverStrategy {
 
     /**
@@ -17,12 +20,4 @@ public interface SolverStrategy {
      */
     Path solve(Maze maze, Point start, Point end);
 
-    static void validStartAndEnd(Point start, Point end, Maze maze) {
-        if (!maze.isValidPosition(start)) {
-            throw new IllegalArgumentException("Стартовая точка находится вне лабиринта");
-        }
-        if (!maze.isValidPosition(end)) {
-            throw new IllegalArgumentException("Конечная точка находится вне лабиринта");
-        }
-    }
 }

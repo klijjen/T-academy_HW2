@@ -2,13 +2,11 @@ package academy.maze.command;
 
 import academy.maze.dto.Maze;
 import academy.maze.generator.Generator;
-import academy.maze.utils.MazeFileManager;
-import academy.maze.utils.MazeUtils;
-import academy.maze.utils.MazeVisualizer;
-import picocli.CommandLine;
+import academy.maze.utils.MazeOutputService;
+import academy.maze.utils.Utils;
+
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
-import java.nio.file.Files;
 import java.util.concurrent.Callable;
 import static academy.maze.generator.Generator.createGenerator;
 
@@ -17,8 +15,21 @@ import static academy.maze.generator.Generator.createGenerator;
  *
  * Генерирует лабиринт указанного размера с использованием выбранного алгоритма.
  * Размеры лабиринта должны быть нечетными числами не менее 1.
+ * Лабиринт автоматически окружается стенами по периметру.
+ *
+ * Алгоритмы генерации:
+ *   - dfs (Depth-First Search): создает лабиринты с длинными коридорами и меньшим количеством тупиков
+ *   - prim (Prim's Algorithm): создает более сбалансированные лабиринты с равномерным распределением путей
+ *
+ * Выходные данные:
+ *   - Если указан файл вывода (-o), лабиринт сохраняется в файл
+ *   - Если файл вывода не указан, лабиринт отображается в консоли
+ *   - Флаг --unicode позволяет использовать Unicode-символы для отображения
+ *
+ * Примечание: фактические размеры лабиринта будут на 2 больше указанных из-за добавления стен по периметру.
  *
  * Примеры использования:
+ *
  * generate --algorithm=dfs --width=15 --height=15
  * generate --algorithm=prim --width=21 --height=21 --output=maze.txt --unicode
  */
@@ -59,37 +70,55 @@ public class GeneratorCommand implements Callable<Integer> {
     )
     private boolean useUnicode;
 
+    /**
+     * Основной метод выполнения команды генерации лабиринта.
+     *
+     * @return 0 в случае успеха, 1 в случае ошибки
+     * @throws Exception при возникновении ошибок генерации или валидации
+     *
+     * Обработка ошибок:
+     * - Некорректные размеры: IllegalArgumentException
+     * - Неподдерживаемый алгоритм: IllegalArgumentException
+     * - Ошибки ввода-вывода: IOException
+     * - Некорректные координаты точек: IllegalArgumentException
+     */
     @Override
     public Integer call() throws Exception {
-        MazeUtils.validateDimensions(width, height);
-        width += 2;
-        height += 2;
-
         try {
-            Generator generator = createGenerator(algorithm);
+            Utils.validateInput(width, height, algorithm, true);
 
-            Maze maze = generator.generate(width, height);
+            Generator generator = createGenerator(algorithm);
+            Maze maze = generator.generate(width + 2, height + 2);
 
             outputMaze(maze);
 
             return 0;
         } catch (Exception e) {
-//            System.err.println("Ошибка при генерации лабиринта: " + e.getMessage());
+            System.out.println(e.getMessage());
             return 1;
         }
     }
 
-
     /**
-     * Выводит лабиринт в консоль или сохраняет в файл
+     * Вывод лабиринта в консоль или файл.
+     *
+     * @param maze лабиринт для вывода
+     *
+     * В зависимости от наличия outputFile:
+     * - Если outputFile указан: лабиринт сохраняется в файл
+     * - Если outputFile не указан: лабиринт выводится в консоль
+     *
+     * Флаг useUnicode определяет набор символов для отображения:
+     * - true: Unicode символы
+     * - false: ASCII символы
      */
     private void outputMaze(Maze maze) {
-        MazeVisualizer visualizer = new MazeVisualizer(useUnicode);
         if (outputFile != null) {
-            MazeFileManager.saveMaze(maze, outputFile, useUnicode);
+            MazeOutputService.outputMaze(maze, useUnicode, outputFile);
         }
         else {
-            visualizer.displayMaze(maze);
+            MazeOutputService.outputMaze(maze, useUnicode);
         }
     }
+
 }

@@ -4,17 +4,15 @@ import academy.maze.dto.Maze;
 import academy.maze.dto.Path;
 import academy.maze.dto.Point;
 import academy.maze.solver.Solver;
-import academy.maze.utils.MazeFileManager;
-import academy.maze.utils.MazeVisualizer;
-import picocli.CommandLine;
+import academy.maze.utils.MazeOutputService;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
-import picocli.CommandLine.Parameters;
 
-import java.io.File;
 import java.util.concurrent.Callable;
 import static academy.maze.solver.Solver.createSolver;
-import static academy.maze.solver.SolverStrategy.validStartAndEnd;
+import static academy.maze.utils.MazeInputService.loadMaze;
+import static academy.maze.utils.Utils.isValidAlgorithm;
+import static academy.maze.utils.Utils.validateStartAndEnd;
 
 /**
  * Команда для решения лабиринтов.
@@ -22,9 +20,18 @@ import static academy.maze.solver.SolverStrategy.validStartAndEnd;
  * Находит путь от начальной до конечной точки в указанном лабиринте
  * с использованием выбранного алгоритма поиска пути.
  *
+ * Алгоритмы решения:
+ * - astar (A* Search): алгоритм поиска с эвристикой, находит кратчайший путь
+ * - dijkstra (Dijkstra): алгоритм поиска по графу, гарантирует оптимальность
+ *
+ * Выходные данные:
+ * - Если путь найден: визуализация решения с подсветкой пути
+ * - Если путь не найден: соответствующее сообщение
+ * - Решение может быть выведено в консоль или сохранено в файл
+ *
  * Примеры использования:
- * solve --algorithm=astar --file=maze.txt 1,1 19,19
- * solve --algorithm=dijkstra --file=maze.txt 0,0 20,20 --output=solution.txt --unicode
+ * solve --algorithm=astar --file=maze.txt --start=1,1 --end=19,19
+ * solve --algorithm=dijkstra --file=maze.txt --start=0,0 --end=20,20 --output=solution.txt --unicode
  */
 @Command(name = "solve", description = "Solve a maze with specified algorithm and points.")
 public class SolverCommand implements Callable<Integer> {
@@ -70,75 +77,89 @@ public class SolverCommand implements Callable<Integer> {
     )
     private boolean useUnicode;
 
+    /**
+     * Основной метод выполнения команды решения лабиринта.
+     *
+     * @return 0 в случае успешного нахождения пути, 1 в случае ошибки или если путь не найден
+     * @throws Exception при возникновении ошибок загрузки, валидации или решения
+     *
+     * Обработка ошибок:
+     * - Некорректный формат файла: IllegalArgumentException
+     * - Неподдерживаемый алгоритм: IllegalArgumentException
+     * - Точки вне лабиринта или на стенах: IllegalArgumentException
+     * - Ошибки чтения файла: IOException
+     */
     @Override
     public Integer call() throws Exception {
         try {
-            // Парсинг и валидация входных данных
             Point start = parsePoint(startPoint);
             Point end = parsePoint(endPoint);
             Maze maze = loadMaze(inputFile);
-            validStartAndEnd(start, end, maze);
+            validateStartAndEnd(start, end, maze);
+            isValidAlgorithm(algorithm, false);
 
-            // Создание решателя и решение лабиринта
             Solver solver = createSolver(algorithm);
             Path solution = solver.solve(maze, start, end);
 
-
-            // Обработка и вывод результата
             return handleSolution(maze, solution, start, end);
         } catch (Exception e) {
-            System.err.println("Invalid point format: " + e.getMessage());
+            System.out.println(e.getMessage());
             return 1;
         }
     }
 
+
     /**
-     * Парсит строку с координатами точки в объект Point
+     * Парсит строку с координатами точки в объект Point.
+     *
+     * @param pointStr строка с координатами в формате "x,y"
+     * @return объект Point с координатами
+     * @throws IllegalArgumentException при некорректном формате или нечисловых координатах
      */
     private Point parsePoint(String pointStr) {
         try {
             String[] parts = pointStr.split(",");
             if (parts.length != 2) {
-                throw new IllegalArgumentException(pointStr + ", expected format: x,y");
+                throw new IllegalArgumentException("Invalid point format: " + pointStr + ", expected format: x,y");
             }
             int x = Integer.parseInt(parts[0].trim());
             int y = Integer.parseInt(parts[1].trim());
             return new Point(x, y);
-        } catch (NumberFormatException e) {
-            throw new IllegalArgumentException("Invalid point format: " + pointStr + ", expected format: x,y");        }
+        } catch (Exception e) {
+            throw new IllegalArgumentException(e.getMessage());        }
     }
 
-    /**
-     * Загружает лабиринт из файла
-     */
-    private Maze loadMaze(String mazeFile) throws Exception {
-        return MazeFileManager.loadMaze(mazeFile);
-    }
 
     /**
-     * Обрабатывает и выводит решение лабиринта
+     * Обрабатывает и выводит решение лабиринта.
+     *
+     * @param maze исходный лабиринт
+     * @param solution найденный путь (может быть пустым)
+     * @param start начальная точка
+     * @param end конечная точка
+     * @return 0 если путь найден, 1 если путь не найден
      */
     private int handleSolution(Maze maze, Path solution, Point start, Point end) {
         if (solution.isEmpty()) {
-            System.out.println("Путь от " + start + " до " + end + " не найден");
+            System.out.println("No path found from " + start + " to " + end);
             return 1;
         }
-
-//        System.out.println("Найден путь длиной: " + solution.length());
         outputSolution(maze, solution);
         return 0;
     }
 
     /**
-     * Выводит решение в консоль или сохраняет в файл
+     * Выводит решение в консоль или сохраняет в файл.
+     *
+     * @param maze исходный лабиринт
+     * @param solution найденный путь
      */
     private void outputSolution(Maze maze, Path solution) {
-        MazeVisualizer visualizer = new MazeVisualizer(useUnicode);
         if (outputFile != null) {
-            MazeFileManager.saveSolution(maze, solution, outputFile, useUnicode);
-//            System.out.println("Решение сохранено в: " + outputFile);
-        } else {
-            visualizer.displayMaze(maze, solution);
+            MazeOutputService.outputMazeWithSolution(maze, solution, useUnicode, outputFile);
+        }
+        else {
+            MazeOutputService.outputMazeWithSolution(maze, solution, useUnicode);
         }
     }
 }
